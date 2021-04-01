@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Globalization;
 
 namespace BridgeMonitor.Controllers
 {
@@ -22,8 +23,21 @@ namespace BridgeMonitor.Controllers
 
         public IActionResult Index()
         {
-            var Pont = GetBridgeMonitorFromApi();
-            return View(Pont);
+            var Ponts = GetBridgeMonitorFromApi();
+            var Date_Actuelle = DateTime.Now;
+            Ponts.Sort((x, y) => DateTime.Compare(x.ClosingDate, y.ClosingDate));
+            foreach (var Pont in Ponts)
+            {
+                if (Date_Actuelle < Pont.ClosingDate)
+                {
+                    return View(Pont);
+                }
+                else{
+                    continue;
+                }
+                
+            }
+            return View();
         }
 
         public IActionResult Privacy()
@@ -31,12 +45,20 @@ namespace BridgeMonitor.Controllers
             return View();
         }
 
+        public IActionResult all_close()
+        {
+            
+            var Pont = GetBridgeMonitorFromApi();
+            Pont.Sort((x, y) => DateTime.Compare(x.ClosingDate, y.ClosingDate));
+            return View(Pont);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        private static List<GestionPont > GetBridgeMonitorFromApi()
+        private static List<GestionPont> GetBridgeMonitorFromApi()
         {
             //Création un HttpClient (= outil qui va permettre d'interroger une URl via une requête HTTP)
             using (var client = new HttpClient())

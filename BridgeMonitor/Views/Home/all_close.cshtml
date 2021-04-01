@@ -2,7 +2,29 @@
     ViewData["Title"] = "Toutes les fermetures";
 }
 
+@model List<GestionPont>
+
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">tableau avec la liste des fermetures</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom du bateau/Raison</th>
+                <th>Type de fermeture</th>
+                <th>Date de fermeture</th>
+                <th>Date de reouverture</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Ponts in Model)
+            {
+                <tr>
+                    <td>@Ponts.BoatName</td>
+                    <td>@Ponts.ClosingType</td>
+                    <td>@Ponts.ClosingDate</td>
+                    <td>@Ponts.ReopeningDate</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
